@@ -5,35 +5,32 @@ from streamlit_option_menu import option_menu
 import pandas as pd
 import numpy as np
 
-# Set page configuration
 st.set_page_config(page_title="Health Assistant",
                    layout="wide",
                    page_icon="🧑‍⚕️")
 
-# getting the working directory of the main.py
 working_dir = os.path.dirname(os.path.abspath(__file__))
 
-# --- LOADER FUNCTION TO PREVENT CRASHES IF FILES MISSING ---
 @st.cache_resource
 def load_models():
     try:
         models = {}
-        # Diabetes
+        
         models['diabetes_model'] = joblib.load(os.path.join(working_dir, 'models/diabetes_model.pkl'))
         models['diabetes_imputer'] = joblib.load(os.path.join(working_dir, 'imputers/diabetes_imputer.pkl'))
         models['diabetes_scaler'] = joblib.load(os.path.join(working_dir, 'scalers/diabetes_scaler.pkl'))
 
-        # Heart Disease
+        
         models['heart_model'] = joblib.load(os.path.join(working_dir, 'models/heart_model.pkl'))
         models['heart_encoder'] = joblib.load(os.path.join(working_dir, 'encoders/heart_encoder.pkl'))
         models['heart_imputer'] = joblib.load(os.path.join(working_dir, 'imputers/heart_imputer.pkl'))
         models['heart_scaler'] = joblib.load(os.path.join(working_dir, 'scalers/heart_scaler.pkl'))
 
-        # Parkinsons
+
         models['parkinsons_model'] = joblib.load(os.path.join(working_dir, 'models/parkinson_model.pkl'))
         models['parkinsons_scaler'] = joblib.load(os.path.join(working_dir, 'scalers/parkinson_scaler.pkl'))
 
-        # Breast Cancer
+        
         models['breast_cancer_model'] = joblib.load(os.path.join(working_dir, 'models/breast-cancer_model.pkl'))
         models['breast_cancer_scaler'] = joblib.load(os.path.join(working_dir, 'scalers/breast-cancer_scaler.pkl'))
         
@@ -44,7 +41,7 @@ def load_models():
 
 models = load_models()
 
-# Only proceed if models loaded successfully
+
 if models:
     # sidebar for navigation
     with st.sidebar:
@@ -57,13 +54,12 @@ if models:
                                icons=['activity', 'heart', 'person', 'gender-female'],
                                default_index=0)
 
-    # ==========================
+
     # Diabetes Prediction Page
-    # ==========================
     if selected == 'Diabetes Prediction':
         st.title('Diabetes Prediction using ML')
 
-        # Using number_input to prevent string conversion errors
+        
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -89,10 +85,10 @@ if models:
             try:
                 user_input = [Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age]
                 
-                # Reshape for transformation (1 sample, n features)
+                
                 user_input_2d = [user_input]
 
-                # Impute missing values (using the SimpleImputer from notebook)
+               
                 imputed_input = models['diabetes_imputer'].transform(user_input_2d)
 
                 # Scale features
@@ -110,19 +106,14 @@ if models:
             except Exception as e:
                 st.error(f"An error occurred during prediction: {e}")
 
-    # ==========================
-    # Heart Disease Prediction Page
-    # ==========================
     if selected == 'Heart Disease Prediction':
         st.title('Heart Disease Prediction using ML')
 
         col1, col2, col3 = st.columns(3)
 
-        # Using correct input types to match OneHotEncoder expectations
         with col1:
             age = st.number_input('Age', min_value=0)
         with col2:
-            # Dropdown ensures exact string match for Encoder
             sex = st.selectbox('Sex', ['M', 'F']) 
         with col3:
             cp = st.selectbox('Chest Pain types', ['ATA', 'NAP', 'ASY', 'TA'])
@@ -147,7 +138,7 @@ if models:
 
         if st.button('Heart Disease Test Result'):
             try:
-                # 1. Create DataFrame exactly as the notebook expects
+            
                 data = {
                     'Age': [age], 'Sex': [sex], 'ChestPainType': [cp], 
                     'RestingBP': [trestbps], 'Cholesterol': [chol], 'FastingBS': [fbs],
@@ -156,25 +147,22 @@ if models:
                 }
                 df_input = pd.DataFrame(data)
 
-                # Define columns based on training notebook
+               
                 num_cols = ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak']
                 cat_cols = ['Sex', 'ChestPainType', 'RestingECG', 'ExerciseAngina', 'ST_Slope']
 
-                # 2. Impute Numerical Columns (KNNImputer)
-                # Note: KNNImputer returns numpy array, we must convert back to DataFrame to keep columns straight if needed,
-                # but since we are stacking immediately, array is fine.
+         \.
                 imputed_num = models['heart_imputer'].transform(df_input[num_cols])
 
-                # 3. Scale Numerical Columns
+            
                 scaled_num = models['heart_scaler'].transform(imputed_num)
 
-                # 4. Encode Categorical Columns
+               
                 encoded_cat = models['heart_encoder'].transform(df_input[cat_cols])
 
-                # 5. Concatenate
                 final_input = np.hstack([scaled_num, encoded_cat])
 
-                # 6. Predict
+
                 heart_prediction = models['heart_model'].predict(final_input)
 
                 if heart_prediction[0] == 1:
@@ -186,13 +174,10 @@ if models:
             except Exception as e:
                 st.error(f"An error occurred: {e}")
 
-    # ==========================
-    # Parkinson's Prediction Page
-    # ==========================
     if selected == "Parkinsons Prediction":
         st.title("Parkinson's Disease Prediction using ML")
 
-        # Keeping text inputs for compactness, but adding validation
+  ]
         col1, col2, col3, col4, col5 = st.columns(5)
 
         with col1:
@@ -264,10 +249,8 @@ if models:
             except ValueError:
                 st.error("Please enter valid numeric values for all fields.")
 
-    # ==========================
-    # Breast Cancer Prediction Page
-    # ==========================
-    if selected == "Breast Cancer Prediction":
+
+      if selected == "Breast Cancer Prediction":
         st.title("Breast Cancer Prediction using ML")
 
         col1, col2, col3, col4, col5 = st.columns(5)
@@ -335,7 +318,7 @@ if models:
 
         breast_cancer_diagnosis = ''
 
-        if st.button("Breast Cancer Test Result"):
+      if st.button("Breast Cancer Test Result"):
             try:
                 user_input = [radius_mean, texture_mean, perimeter_mean, area_mean, smoothness_mean, 
                               compactness_mean, concavity_mean, concave_points_mean, symmetry_mean, fractal_dimension_mean, 
