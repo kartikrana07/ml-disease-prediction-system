@@ -109,7 +109,7 @@ CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0
 
 The app is deployed live on **Hugging Face Spaces** and can be accessed without any local setup:
 
-🔗 **[Click here to open the live app](https://huggingface.co/spaces/kartikrana07/ml-disease-prediction-system)**
+🔗 **[Click here to open the live app](https://kartikrana-7-disease-predictor.hf.space)**
 
 > Hugging Face Spaces hosts Streamlit apps for free. The app automatically builds from the repository whenever changes are pushed.
 
