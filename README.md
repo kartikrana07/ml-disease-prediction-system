@@ -139,7 +139,7 @@ seaborn
 
 **Kartik Rana**
 - GitHub: [@kartikrana07](https://github.com/kartikrana07)
-- LinkedIn: [linkedin.com/in/kartikrana](https://linkedin.com/in/kartikrana-)
+- LinkedIn: [linkedin.com/in/kartikrana-](https://linkedin.com/in/kartikrana-)
 - Email: kartikrana8284@gmail.com
 
 ---
