@@ -85,22 +85,24 @@ App opens at `http://localhost:8501`
 
 ```dockerfile
 # Use official Python base image
-FROM python:3.10-slim
+FROM python:3.11
 
 # Set working directory inside the container
 WORKDIR /app
 
+
 # Copy all project files into the container
-COPY . .
+COPY . /app
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+
 # Expose the Streamlit default port
-EXPOSE 8501
+EXPOSE 7860
 
 # Command to run the Streamlit app
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
 ```
 
 ---
